@@ -2285,30 +2285,6 @@ boolean intersect_ray_with_segment(vector3 q0, vector3 q1, vector3 q2, vector3 u
 /***************************************************************/
 boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
                               boolean include_boundaries)
-/*
-{
-  vector3 u = {0.0, -1.0, 0.0};
-  int nn, edges_crossed=0;
-  for(nn=0; nn<num_nodes; nn++)
-   { int status = intersect_ray_with_segment(q0, nodes[nn], nodes[(nn+1)%num_nodes], u, 0);
-     if (status==IN_SEGMENT)
-      return include_boundaries;
-     else if (status==INTERSECTING)
-      edges_crossed++;
-     else if (status==ON_RAY)
-      { vector3 nm1 = nodes[ (nn==0 ? num_nodes-1 : nn-1) ];
-        vector3 n0  = nodes[ nn ];
-        vector3 np1 = nodes[ (nn+1) % num_nodes ];
-        vector3 np2 = nodes[ (nn+2) % num_nodes ];
-        int last_status = intersect_ray_with_segment(q0, nm1, n0, u, 0);
-        if (last_status==INTERSECTING) edges_crossed--;
-        int next_status = intersect_ray_with_segment(q0, np1, np2, u, 0);
-        if (next_status==INTERSECTING) edges_crossed--;
-      }
-   }
-  return (edges_crossed % 2);
-}
-*/
 {
 	// Create axes
 	vector3 xAxisPos = {1.0, 0.0. 0.0};
@@ -2394,8 +2370,33 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 	
 	// Odd count --> in the polygon (1)
 	// Even count --> outside (0)
-	return count % 2;
+	return (count+1) % 2;
 }
+/*
+{
+  vector3 u = {0.0, -1.0, 0.0};
+  int nn, edges_crossed=0;
+  for(nn=0; nn<num_nodes; nn++)
+   { int status = intersect_ray_with_segment(q0, nodes[nn], nodes[(nn+1)%num_nodes], u, 0);
+     if (status==IN_SEGMENT)
+      return include_boundaries;
+     else if (status==INTERSECTING)
+      edges_crossed++;
+     else if (status==ON_RAY)
+      { vector3 nm1 = nodes[ (nn==0 ? num_nodes-1 : nn-1) ];
+        vector3 n0  = nodes[ nn ];
+        vector3 np1 = nodes[ (nn+1) % num_nodes ];
+        vector3 np2 = nodes[ (nn+2) % num_nodes ];
+        int last_status = intersect_ray_with_segment(q0, nm1, n0, u, 0);
+        if (last_status==INTERSECTING) edges_crossed--;
+        int next_status = intersect_ray_with_segment(q0, np1, np2, u, 0);
+        if (next_status==INTERSECTING) edges_crossed--;
+      }
+   }
+  return (edges_crossed % 2);
+}
+*/
+
 
 boolean node_in_polygon(double q0x, double q0y, vector3 *nodes, int num_nodes)
 { vector3 q0;
