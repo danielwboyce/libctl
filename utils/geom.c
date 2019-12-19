@@ -2283,9 +2283,220 @@ boolean intersect_ray_with_segment(vector3 q0, vector3 q1, vector3 q2, vector3 u
 /* q0 to infinity and count the number of edges intersected;   */
 /* point lies in polygon iff this is number is odd.            */
 /***************************************************************/
-boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
+
+/*
+2 dimensional point.
+*/
+typedef struct  {
+	double x;
+	double y;
+} Point;
+
+/*
+2 dimensional line segment from p1 to p2.
+*/
+typedef struct {
+	Point p1;
+	Point p2;
+} Line;
+
+/*
+Travelling from p0 to p1 to p2.
+@return -1 for counter-clockwise or if p0 is on the line segment between p1 and p2
+        1 for clockwise or if p1 is on the line segment between p0 and p2
+		0 if p2 in on the line segment between p0 and p1
+*/
+static int ccw(Point p0, Point p1, Point p2) {
+	long double dx1 = p1.x - p0.x;
+	long double dy1 = p1.y - p0.y;
+	long double dx2 = p2.x - p0.x;
+	long double dy2 = p2.y - p0.y;
+
+	// second slope is greater than the first one --> counter-clockwise
+	if (dx1 * dy2 > dx2 * dy1) {
+		return 1;
+	}
+	// first slope is greater than the second one --> clockwise
+	else if (dx1 * dy2 < dx2 * dy1) {
+		return -1;
+	}
+	// both slopes are equal --> collinear line segments
+	else {
+		// p0 is between p1 and p2
+		if (dx1 * dx2 < 0 || dy1 * dy2 < 0) {
+			return -1;
+		}
+		// p2 is between p0 and p1, as the length is compared
+		// square roots are avoided to increase performance
+		else if (dx1 * dx1 + dy1 * dy1 >= dx2 * dx2 + dy2 * dy2) {
+			return 0;
+		}
+		// p1 is between p0 and p2
+		else {
+			return 1;
+		}
+	}
+}
+
+/*
+Checks if the line segments intersect.
+@return 1 if there is an intersection
+        0 otherwise
+*/
+static int intersect(Line line1, Line line2) {
+	// ccw returns 0 if two points are identical, except from the situation
+	// when p0 and p1 are identical and different from p2
+	int ccw11 = ccw(line1.p1, line1.p2, line2.p1);
+	int ccw12 = ccw(line1.p1, line1.p2, line2.p2);
+	int ccw21 = ccw(line2.p1, line2.p2, line1.p1);
+	int ccw22 = ccw(line2.p1, line2.p2, line1.p2);
+
+	return (((ccw11 * ccw12 < 0) && (ccw21 * ccw22 < 0))
+			// one ccw value is zero to detect an intersection
+			|| (ccw11 * ccw12 * ccw21 * ccw22 == 0)) ? 1 : 0;
+}
+
+/*
+@return next valid index (current + 1 or start index)
+		for an array with n entries
+@param n entries count
+@param current current index
+ */
+static int getNextIndex(int n, int current) {
+	return current == n - 1 ? 0 : current + 1;
+}
+
+
+boolean node_in_or_on_polygon(Point q0, Point* nodes, int num_nodes,
+		                      boolean include_boundaries) {
+	Line xAxis;
+	Line xAxisPositive;
+
+	Point startPoint;
+	Point endPoint;
+	Line edge;
+	Line testPointLine;
+
+	int i;
+	int startNodePosition;
+	int count;
+	int seenPoints;
+
+	// Initial start point
+	startPoint.x = 0.0;
+	startPoint.y = 0.0;
+
+	// Create axes
+	xAxis.p1.x = 0.0;
+	xAxis.p1.y = 0.0;
+	xAxis.p2.x = 0.0;
+	xAxis.p2.y = 0.0;
+	xAxisPositive.p1.x = 0.0;
+	xAxisPositive.p1.y = 0.0;
+	xAxisPositive.p2.x = 0.0;
+	xAxisPositive.p2.y = 0.0;
+
+	startNodePosition = -1;
+
+	// Is q0 on a node?
+	// Move nodes to 0|0
+	// Enlarge axes
+	for (i = 0; i < num_nodes; i++) {
+		if (q0.x == nodes[i].x && q0.y == nodes[i].y) {
+			return include_boundaries;
+		}
+
+		// Move nodes to 0|0
+		nodes[i].x -= q0.x;
+		nodes[i].y -= q0.y;
+
+		// Find start point which is not on the x axis
+		if (nodes[i].y != 0) {
+			startPoint.x = nodes[i].x;
+			startPoint.y = nodes[i].y;
+			startNodePosition = i;
+		}
+
+		// Enlarge axes
+		if (nodes[i].x > xAxis.p2.x) {
+			xAxis.p2.x = nodes[i].x;
+			xAxisPositive.p2.x = nodes[i].x;
+		}
+		if (nodes[i].x < xAxis.p1.x) {
+			xAxis.p1.x = nodes[i].x;
+		}
+	}
+
+	// Move q0 to 0|0
+	q0.x = 0.0;
+	q0.y = 0.0;
+	testPointLine.p1 = q0;
+	testPointLine.p2 = q0;
+
+	// Is q0 on an edge?
+	for (i = 0; i < num_nodes; i++) {
+		edge.p1 = nodes[i];
+		// Get correct index of successor edge
+		edge.p2 = nodes[getNextIndex(num_nodes, i)];
+		if (intersect(testPointLine, edge) == 1) {
+			return include_boundaries;
+		}
+	}
+
+	// No start point found and point is not on an edge or node
+	// --> point is outside
+	if (startNodePosition == -1) {
+		return 0;
+	}
+
+	count = 0;
+	seenPoints = 0;
+	i = startNodePosition;
+
+	// Consider all edges
+	while (seenPoints < num_nodes) {
+
+		double savedX = nodes[getNextIndex(num_nodes, i)].x;
+		int savedIndex = getNextIndex(num_nodes, i);
+
+		// Move to next point which is not on the x-axis
+		do {
+			i = getNextIndex(num_nodes, i);
+			seenPoints++;
+		} while (nodes[i].y == 0);
+		// Found end point
+		endPoint.x = nodes[i].x;
+		endPoint.y = nodes[i].y;
+
+		// Only intersect lines that cross the x-axis
+		if (startPoint.y * endPoint.y < 0) {
+			edge.p1 = startPoint;
+			edge.p2 = endPoint;
+
+			// No nodes have been skipped and the successor node
+			// has been chosen as the end point
+			if (savedIndex == i) {
+				count += intersect(edge, xAxisPositive);
+			}
+			// If at least one node on the right side has been skipped,
+			// the original edge would have been intersected
+			// --> intersect with full x-axis
+			else if (savedX > 0) {
+				count += intersect(edge, xAxis);
+			}
+		}
+		// End point is the next start point
+		startPoint = endPoint;
+	}
+
+	// Odd count --> in the nodes (1)
+	// Even count --> outside (0)
+	return count % 2;
+}
+
+
+/*boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
                               boolean include_boundaries)
-//{ return 0; }
 {
 	// Create axes
 	vector3 xAxisPos = {1.0, 0.0, 0.0};
@@ -2373,6 +2584,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
 	// Even count --> outside (0)
 	return edges_crossed % 2;
 }
+*/
 /*
 {
   vector3 u = {0.0, -1.0, 0.0};
