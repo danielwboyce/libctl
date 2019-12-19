@@ -2285,6 +2285,7 @@ boolean intersect_ray_with_segment(vector3 q0, vector3 q1, vector3 q2, vector3 u
 /***************************************************************/
 boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
                               boolean include_boundaries)
+{ return 1; }
 /*
 {
 	// Create axes
@@ -2374,7 +2375,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 	return edges_crossed % 2;
 }
 */
-
+/*
 {
   vector3 u = {0.0, -1.0, 0.0};
   int nn, edges_crossed=0;
@@ -2397,7 +2398,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
    }
   return (edges_crossed % 2);
 }
-
+*/
 
 
 boolean node_in_polygon(double q0x, double q0y, vector3 *nodes, int num_nodes)
