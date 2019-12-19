@@ -2370,7 +2370,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 	
 	// Odd count --> in the polygon (1)
 	// Even count --> outside (0)
-	return (edges_crossed+1) % 2;
+	return edges_crossed % 2;
 }
 /*
 {
