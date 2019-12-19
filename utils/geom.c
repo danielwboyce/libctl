@@ -2283,7 +2283,7 @@ boolean intersect_ray_with_segment(vector3 q0, vector3 q1, vector3 q2, vector3 u
 /* q0 to infinity and count the number of edges intersected;   */
 /* point lies in polygon iff this is number is odd.            */
 /***************************************************************/
-boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
+boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
                               boolean include_boundaries)
 { return 0; }
 /*
