@@ -2487,7 +2487,7 @@ boolean node_in_or_on_polygon(Point q0, Point* nodes, int num_nodes,
 */
 
 
-boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
+boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
                               boolean include_boundaries)
 {
 	// Create axes
