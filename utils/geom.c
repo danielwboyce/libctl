@@ -2284,7 +2284,7 @@ boolean intersect_ray_with_segment(vector3 q0, vector3 q1, vector3 q2, vector3 u
 /* point lies in polygon iff this is number is odd.            */
 /***************************************************************/
 
-/*
+
 // 2 dimensional point.
 typedef struct  {
 	double x;
@@ -2484,7 +2484,7 @@ boolean node_in_or_on_polygon(Point q0, Point* nodes, int num_nodes,
 	// Even count --> outside (0)
 	return count % 2;
 }
-*/
+
 
 /*
 boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
@@ -2578,6 +2578,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
 }
 */
 
+/*
 boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
                               boolean include_boundaries)
 {
@@ -2602,7 +2603,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
    }
   return (edges_crossed % 2);
 }
-
+*/
 
 
 boolean node_in_polygon(double q0x, double q0y, vector3 *nodes, int num_nodes)
