@@ -2509,13 +2509,13 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 			return include_boundaries;
 		}
 		
-		nodes[nn]->x -= q0.x;
-		nodes[nn]->y -= q0.y;
+		nodes[nn].x -= q0.x;
+		nodes[nn].y -= q0.y;
 		
 		// Find start point which is not on the x axis (from q0)
-		if (nodes[nn]->y != 0) {
-			startPoint.x = nodes[nn]->x;
-			startPoint.y = nodes[nn]->y;
+		if (nodes[nn].y != 0) {
+			startPoint.x = nodes[nn].x;
+			startPoint.y = nodes[nn].y;
 			startNodePosition = nn;
 		}
 	}
@@ -2535,17 +2535,17 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 	
 	// Consider all edges
 	while (checkedPoints < num_nodes) {
-		int savedX = nodes[ (nn+1)%num_nodes ]->x;
+		int savedX = nodes[ (nn+1)%num_nodes ].x;
 		int savedIndex = (nn+1)%num_nodes;
 		
 		// Move to next point which is not on the x-axis
 		do {
 			nn = (nn+1)%num_nodes;
 			checkedPoints++;
-		} while (nodes[nn]->y == 0);
+		} while (nodes[nn].y == 0);
 		// Found end point
-		endPoint.x = nodes[nn]->x;
-		endPoint.y = nodes[nn]->y;
+		endPoint.x = nodes[nn].x;
+		endPoint.y = nodes[nn].y;
 		
 		// Only intersect lines that cross the x-axis
 		if (startPoint.y * endPoint.y < 0) {
