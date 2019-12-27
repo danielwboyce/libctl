@@ -2285,27 +2285,23 @@ boolean intersect_ray_with_segment(vector3 q0, vector3 q1, vector3 q2, vector3 u
 /***************************************************************/
 
 /*
-2 dimensional point.
-*/
+// 2 dimensional point.
 typedef struct  {
 	double x;
 	double y;
 } Point;
 
-/*
-2 dimensional line segment from p1 to p2.
-*/
+
+// 2 dimensional line segment from p1 to p2.
 typedef struct {
 	Point p1;
 	Point p2;
 } Line;
 
-/*
-Travelling from p0 to p1 to p2.
-@return -1 for counter-clockwise or if p0 is on the line segment between p1 and p2
-        1 for clockwise or if p1 is on the line segment between p0 and p2
-		0 if p2 in on the line segment between p0 and p1
-*/
+// Travelling from p0 to p1 to p2.
+// @return -1 for counter-clockwise or if p0 is on the line segment between p1 and p2
+//          1 for clockwise or if p1 is on the line segment between p0 and p2
+// 		    0 if p2 in on the line segment between p0 and p1
 static int ccw(Point p0, Point p1, Point p2) {
 	long double dx1 = p1.x - p0.x;
 	long double dy1 = p1.y - p0.y;
@@ -2338,11 +2334,9 @@ static int ccw(Point p0, Point p1, Point p2) {
 	}
 }
 
-/*
-Checks if the line segments intersect.
-@return 1 if there is an intersection
-        0 otherwise
-*/
+// Checks if the line segments intersect.
+// @return 1 if there is an intersection
+//         0 otherwise
 static int intersect(Line line1, Line line2) {
 	// ccw returns 0 if two points are identical, except from the situation
 	// when p0 and p1 are identical and different from p2
@@ -2356,16 +2350,13 @@ static int intersect(Line line1, Line line2) {
 			|| (ccw11 * ccw12 * ccw21 * ccw22 == 0)) ? 1 : 0;
 }
 
-/*
-@return next valid index (current + 1 or start index)
-		for an array with n entries
-@param n entries count
-@param current current index
- */
+// @return next valid index (current + 1 or start index)
+// 		   for an array with n entries
+// @param n entries count
+// @param current current index
 static int getNextIndex(int n, int current) {
 	return current == n - 1 ? 0 : current + 1;
 }
-
 
 boolean node_in_or_on_polygon(Point q0, Point* nodes, int num_nodes,
 		                      boolean include_boundaries) {
@@ -2493,9 +2484,10 @@ boolean node_in_or_on_polygon(Point q0, Point* nodes, int num_nodes,
 	// Even count --> outside (0)
 	return count % 2;
 }
+*/
 
-
-/*boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
+/*
+boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
                               boolean include_boundaries)
 {
 	// Create axes
@@ -2585,7 +2577,9 @@ boolean node_in_or_on_polygon(Point q0, Point* nodes, int num_nodes,
 	return edges_crossed % 2;
 }
 */
-/*
+
+boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
+                              boolean include_boundaries)
 {
   vector3 u = {0.0, -1.0, 0.0};
   int nn, edges_crossed=0;
@@ -2608,7 +2602,7 @@ boolean node_in_or_on_polygon(Point q0, Point* nodes, int num_nodes,
    }
   return (edges_crossed % 2);
 }
-*/
+
 
 
 boolean node_in_polygon(double q0x, double q0y, vector3 *nodes, int num_nodes)
