@@ -2298,16 +2298,18 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 	int startNodePosition = -1;
 	int nn, edges_crossed=0;
 	
+	/*
 	// need to copy array of nodes, else the original array will be altered
 	vector3 mynodes[num_nodes];
 	for( nn = 0; nn < num_nodes; nn++ ){
 		mynodes[nn] = nodes[nn];
 	}
+	*/
 	
 	// Is q0 on a vertex or edge?
 	// Transform coordinate system of nodes such that q0 is at 0|0
 	for(nn=0; nn<num_nodes; nn++) {
-		int status = intersect_ray_with_segment(q0, mynodes[nn], mynodes[(nn+1)%num_nodes], xAxisPos, 0);
+		int status = intersect_ray_with_segment(q0, nodes[nn], nodes[(nn+1)%num_nodes], xAxisPos, 0);
 		if (status==IN_SEGMENT) {
 			return include_boundaries;
 		}
@@ -2316,9 +2318,9 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 		// mynodes[nn].y -= q0.y;
 		
 		// Find start point which is not on the x axis (from q0)
-		if (mynodes[nn].y - q0.y != 0) {
-			startPoint.x = mynodes[nn].x;
-			startPoint.y = mynodes[nn].y;
+		if (nodes[nn].y - q0.y != 0) {
+			startPoint.x = nodes[nn].x;
+			startPoint.y = nodes[nn].y;
 			startNodePosition = nn;
 		}
 	}
@@ -2338,17 +2340,17 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 	
 	// Consider all edges
 	while (checkedPoints < num_nodes) {
-		int savedX = mynodes[ (nn+1)%num_nodes ].x;
+		int savedX = nodes[ (nn+1)%num_nodes ].x;
 		int savedIndex = (nn+1)%num_nodes;
 		
 		// Move to next point which is not on the x-axis
 		do {
 			nn = (nn+1)%num_nodes;
 			checkedPoints++;
-		} while (mynodes[nn].y - q0.y == 0);
+		} while (nodes[nn].y - q0.y == 0);
 		// Found end point
-		endPoint.x = mynodes[nn].x;
-		endPoint.y = mynodes[nn].y;
+		endPoint.x = nodes[nn].x;
+		endPoint.y = nodes[nn].y;
 		
 		// Only intersect lines that cross the x-axis
 		if ((startPoint.y - q0.y) * (endPoint.y - q0.y) < 0) {
