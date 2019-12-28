@@ -2288,8 +2288,8 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
                               boolean include_boundaries)
 {
 	// Create axes
-	vector3 xAxisPos = {0.0, -1.0, 0.0};
-	vector3 xAxisNeg = {0.0, 1.0, 0.0};
+	vector3 xAxisPos = {1.0, 0.0, 0.0};
+	vector3 xAxisNeg = {-1.0, 0.0, 0.0};
 	
 	// Initial start point
 	vector3 startPoint;
