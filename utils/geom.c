@@ -2298,14 +2298,6 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 	int startNodePosition = -1;
 	int nn, edges_crossed=0;
 	
-	/*
-	// need to copy array of nodes, else the original array will be altered
-	vector3 mynodes[num_nodes];
-	for( nn = 0; nn < num_nodes; nn++ ){
-		mynodes[nn] = nodes[nn];
-	}
-	*/
-	
 	// Is q0 on a vertex or edge?
 	// Transform coordinate system of nodes such that q0 is at 0|0
 	for(nn=0; nn<num_nodes; nn++) {
@@ -2314,9 +2306,6 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 			return include_boundaries;
 		}
 		
-		// mynodes[nn].x -= q0.x;
-		// mynodes[nn].y -= q0.y;
-		
 		// Find start point which is not on the x axis (from q0)
 		if (nodes[nn].y - q0.y != 0) {
 			startPoint.x = nodes[nn].x;
@@ -2324,10 +2313,6 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 			startNodePosition = nn;
 		}
 	}
-	
-	// Move q0 to 0|0
-	// q0.x = 0;
-	// q0.y = 0;
 	
 	// No start point found and point is not on an edge or node
 	// --> point is outside
@@ -2366,9 +2351,8 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 			// the original edge would have been intersected
 			// --> intersect with full x-axis
 			else if (savedX > 0) {
-				int statusPos = intersect_ray_with_segment(q0, startPoint, endPoint, xAxisPos, 0);
-				int statusNeg = intersect_ray_with_segment(q0, startPoint, endPoint, xAxisNeg, 0);
-				if (statusPos == INTERSECTING || statusNeg == INTERSECTING) {
+				int status = intersect_line_with_segment(q0, startPoint, endPoint, xAxisPos, 0);
+				if (status == INTERSECTING) {
 					edges_crossed++;
 				}
 			}
