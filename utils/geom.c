@@ -2315,8 +2315,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 		}
 		
 		// Find start point which is not on the x axis (from q0)
-		// if (fabs(nodes[nn].y - q0.y) > THRESH) {
-		if (fabs(nodes[nn].y - q0.y) > 1.0e-5) {
+		if (fabs(nodes[nn].y - q0.y) > THRESH) {
 			startNodePosition = nn;
 			startPoint = nodes[startNodePosition];
 		}
@@ -2340,8 +2339,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 		do {
 			nn = (nn+1)%num_nodes;
 			checkedPoints++;
-		// } while (fabs(nodes[nn].y - q0.y) < THRESH);
-		} while (fabs(nodes[nn].y - q0.y) < 1.0e-5);
+		} while (fabs(nodes[nn].y - q0.y) < THRESH);
 		// Found end point
 		endPoint = nodes[nn];
 		
@@ -2360,8 +2358,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 			// If at least one node on the right side has been skipped,
 			// the original edge would have been intersected
 			// --> intersect with full x-axis
-			// else if (savedX - q0.x > THRESH) {
-			else if (savedX > 1.0e-5) {
+			else if (savedX > THRESH) {
 				int status = intersect_line_with_segment(q0, startPoint, endPoint, xAxis, 0);
 				if (status == INTERSECTING) {
 					edges_crossed++;
@@ -2376,35 +2373,6 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 	// Even count --> outside (0)
 	return edges_crossed % 2;
 }
-
-
-/*
-boolean node_in_or_on_polygon(vector3 q0, vector3* nodes, int num_nodes,
-                              boolean include_boundaries)
-{
-  vector3 u = {0.0, -1.0, 0.0};
-  int nn, edges_crossed=0;
-  for(nn=0; nn<num_nodes; nn++)
-   { int status = intersect_ray_with_segment(q0, nodes[nn], nodes[(nn+1)%num_nodes], u, 0);
-     if (status==IN_SEGMENT)
-      return include_boundaries;
-     else if (status==INTERSECTING)
-      edges_crossed++;
-     else if (status==ON_RAY)
-      { vector3 nm1 = nodes[ (nn==0 ? num_nodes-1 : nn-1) ];
-        vector3 n0  = nodes[ nn ];
-        vector3 np1 = nodes[ (nn+1) % num_nodes ];
-        vector3 np2 = nodes[ (nn+2) % num_nodes ];
-        int last_status = intersect_ray_with_segment(q0, nm1, n0, u, 0);
-        if (last_status==INTERSECTING) edges_crossed--;
-        int next_status = intersect_ray_with_segment(q0, np1, np2, u, 0);
-        if (next_status==INTERSECTING) edges_crossed--;
-      }
-   }
-  return (edges_crossed % 2);
-}
-*/
-
 
 boolean node_in_polygon(double q0x, double q0y, vector3 *nodes, int num_nodes)
 { vector3 q0;
