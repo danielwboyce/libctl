@@ -2358,7 +2358,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 			// If at least one node on the right side has been skipped,
 			// the original edge would have been intersected
 			// --> intersect with full x-axis
-			else if (savedX > THRESH) {
+			else if (savedX - q0.x > THRESH) {
 				int status = intersect_line_with_segment(q0, startPoint, endPoint, xAxis, 0);
 				if (status == INTERSECTING) {
 					edges_crossed++;
