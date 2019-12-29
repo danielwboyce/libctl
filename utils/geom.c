@@ -2304,18 +2304,18 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 	vector3 endPoint;
 	
 	int startNodePosition = -1;
-	int nn, edges_crossed=0;
+	int nn, edges_crossed = 0;
 	
 	// Is q0 on a vertex or edge?
 	// Transform coordinate system of nodes such that q0 is at 0|0
-	for(nn=0; nn<num_nodes; nn++) {
+	for(nn = 0; nn < num_nodes; nn++) {
 		int status = intersect_ray_with_segment(q0, nodes[nn], nodes[(nn+1)%num_nodes], xAxis, 0);
-		if (status==IN_SEGMENT) {
+		if (status == IN_SEGMENT) {
 			return include_boundaries;
 		}
 		
 		// Find start point which is not on the x axis (from q0)
-		if (nodes[nn].y - q0.y != 0) {
+		if (fabs(nodes[nn].y - q0.y) > THRESH) {
 			startPoint.x = nodes[nn].x;
 			startPoint.y = nodes[nn].y;
 			startNodePosition = nn;
@@ -2340,7 +2340,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 		do {
 			nn = (nn+1)%num_nodes;
 			checkedPoints++;
-		} while (nodes[nn].y - q0.y == 0);
+		} while (fabs(nodes[nn].y - q0.y) < THRESH);
 		// Found end point
 		endPoint.x = nodes[nn].x;
 		endPoint.y = nodes[nn].y;
@@ -2358,7 +2358,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 			// If at least one node on the right side has been skipped,
 			// the original edge would have been intersected
 			// --> intersect with full x-axis
-			else if (savedX > 0) {
+			else if (savedX > THRESH) {
 				int status = intersect_line_with_segment(q0, startPoint, endPoint, xAxis, 0);
 				if (status == INTERSECTING) {
 					edges_crossed++;
