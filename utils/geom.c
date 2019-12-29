@@ -2335,8 +2335,8 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 	
 	// Consider all edges
 	while (checkedPoints < num_nodes) {
-		int savedX = nodes[ (nn+1)%num_nodes ].x;
 		int savedIndex = (nn+1)%num_nodes;
+		int savedX = nodes[savedIndex].x;
 		
 		// Move to next point which is not on the x-axis
 		do {
@@ -2349,9 +2349,9 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 		endPoint.y = nodes[nn].y;
 		endPoint.z = nodes[nn].z;
 		
-		// Only intersect lines that cross the x-axis
-		// don't need to correct for rounding error in the if statement because startPoint
-		// and endPoint are screened to never lie on the x-axis
+		// Only intersect lines that cross the x-axis (don't need to correct for rounding 
+		// error in the if statement because startPoint and endPoint are screened to
+		// never lie on the x-axis)
 		if ((startPoint.y - q0.y) * (endPoint.y - q0.y) < 0) {
 			// No nodes have been skipped and the successor node
 			// has been chose as the end point
