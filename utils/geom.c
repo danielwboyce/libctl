@@ -2317,9 +2317,10 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 		// Find start point which is not on the x axis (from q0)
 		// if (fabs(nodes[nn].y - q0.y) > THRESH) {
 		if (fabs(nodes[nn].y - q0.y) > 1.0e-6) {
-			startPoint.x = nodes[nn].x;
-			startPoint.y = nodes[nn].y;
+			// startPoint.x = nodes[nn].x;
+			// startPoint.y = nodes[nn].y;
 			startNodePosition = nn;
+			startPoint = nodes[startNodePosition];
 		}
 	}
 	
@@ -2344,8 +2345,9 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 		// } while (fabs(nodes[nn].y - q0.y) < THRESH);
 		} while (fabs(nodes[nn].y - q0.y) < 1.0e-6);
 		// Found end point
-		endPoint.x = nodes[nn].x;
-		endPoint.y = nodes[nn].y;
+		// endPoint.x = nodes[nn].x;
+		// endPoint.y = nodes[nn].y;
+		endPoint = nodes[nn];
 		
 		// Only intersect lines that cross the x-axis
 		// don't need to correct for rounding error in the if statement because startPoint
