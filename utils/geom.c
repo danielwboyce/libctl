@@ -2279,17 +2279,25 @@ boolean intersect_ray_with_segment(vector3 q0, vector3 q1, vector3 q2, vector3 u
 /***************************************************************/
 /* 2D point-in-polygon test: return 1 if q0 lies within the    */
 /* polygon with the given vertices, 0 otherwise.               */
-// method: cast a plumb line in the negative y direction from  */
+// method: cast a plumb line in the positive x direction from  */
 /* q0 to infinity and count the number of edges intersected;   */
 /* point lies in polygon iff this is number is odd.            */
+/***************************************************************/ 
+/* Implementation of:										   */
+/*															   */
+/* M. Galetzka and P. Glauner, "A Simple and Correct Even-Odd  */
+/* Algorithm for the Point-in-Polygon Problem for Complex      */
+/* Polygons", Proceedings of the 12th International Joint      */
+/* Conference on Computer Vision, Imaging and Computer         */ 
+/* Graphics Theory and Applications (VISIGRAPP 2017), Volume   */
+/* 1: GRAPP, Porto, Portugal, 2017.							   */
 /***************************************************************/
 
 boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
                               boolean include_boundaries)
 {
 	// Create axes
-	vector3 xAxisPos = {1.0, 0.0, 0.0};
-	vector3 xAxisNeg = {-1.0, 0.0, 0.0};
+	vector3 xAxis = {1.0, 0.0, 0.0};
 	
 	// Initial start point
 	vector3 startPoint;
@@ -2301,7 +2309,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 	// Is q0 on a vertex or edge?
 	// Transform coordinate system of nodes such that q0 is at 0|0
 	for(nn=0; nn<num_nodes; nn++) {
-		int status = intersect_ray_with_segment(q0, nodes[nn], nodes[(nn+1)%num_nodes], xAxisPos, 0);
+		int status = intersect_ray_with_segment(q0, nodes[nn], nodes[(nn+1)%num_nodes], xAxis, 0);
 		if (status==IN_SEGMENT) {
 			return include_boundaries;
 		}
@@ -2342,7 +2350,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 			// No nodes have been skipped and the successor node
 			// has been chose as the end point
 			if (savedIndex == nn) {
-				int status = intersect_ray_with_segment(q0, startPoint, endPoint, xAxisPos, 0);
+				int status = intersect_ray_with_segment(q0, startPoint, endPoint, xAxis, 0);
 				if (status == INTERSECTING) {
 					edges_crossed++;
 				}
@@ -2351,7 +2359,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
 			// the original edge would have been intersected
 			// --> intersect with full x-axis
 			else if (savedX > 0) {
-				int status = intersect_line_with_segment(q0, startPoint, endPoint, xAxisPos, 0);
+				int status = intersect_line_with_segment(q0, startPoint, endPoint, xAxis, 0);
 				if (status == INTERSECTING) {
 					edges_crossed++;
 				}
