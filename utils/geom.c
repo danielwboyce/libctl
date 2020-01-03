@@ -2062,7 +2062,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
   // Consider all edges
   while (checkedPoints < num_nodes) {
     int savedIndex = (nn + 1) % num_nodes;
-    int savedX = nodes[savedIndex].x;
+    double savedX = nodes[savedIndex].x;
 
     // Move to next point which is not on the x-axis
     do {
