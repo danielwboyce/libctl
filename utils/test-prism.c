@@ -394,7 +394,7 @@ int test_point_in_polygon(int write_log) {
   int i;
   
   for (i = 0; i < num_nodes; i++) {
-    vector p;
+    vector3 p;
     p.x = 0.0;
     p.y = 0.0;
     p.z = 0.0;
