@@ -376,6 +376,7 @@ int test_point_in_polygon(int write_log) {
   
   vector3 nodes[num_nodes];
   
+  /*
   nodes[0] = {0.5, 0.2, 0.0};
   nodes[1] = {0.6, 0.3, 0.0};
   nodes[2] = {0.5, 0.4, 0.0};
@@ -388,15 +389,62 @@ int test_point_in_polygon(int write_log) {
   nodes[9] = {0.4, 0.5, 0.0};
   nodes[10] = {0.3, 0.6, 0.0};
   nodes[11] = {0.2, 0.5, 0.0};
+  */
+  
+  int i;
+  
+  for (i = 0; i < num_nodes; i++) {
+    vector p;
+    p.x = 0.0;
+    p.y = 0.0;
+    p.z = 0.0;
+    nodes[i] = p;
+  }
+  
+  nodes[0].x = 0.5;
+  nodes[0].y = 0.2;
 
-  FILE *f = write_long ? fopen("/tmp/test-prism.point-in-polygon", "w") : 0;
+  nodes[1].x = 0.6;
+  nodes[1].y = 0.3;
+
+  nodes[2].x = 0.5;
+  nodes[2].y = 0.4;
+
+  nodes[3].x = 0.6;
+  nodes[3].y = 0.5;
+
+  nodes[4].x = 0.7;
+  nodes[4].y = 0.4;
+
+  nodes[5].x = 0.8;
+  nodes[5].y = 0.5;
+
+  nodes[6].x = 0.5;
+  nodes[6].y = 0.8;
+
+  nodes[7].x = 0.4;
+  nodes[7].y = 0.7;
+
+  nodes[8].x = 0.5;
+  nodes[8].y = 0.6;
+
+  nodes[9].x = 0.4;
+  nodes[9].y = 0.5;
+
+  nodes[10].x = 0.3;
+  nodes[10].y = 0.6;
+
+  nodes[11].x = 0.2;
+  nodes[11].y = 0.5;
+
+  FILE *f = write_log ? fopen("/tmp/test-prism.point-in-polygon", "w") : 0;
   
   boolean include_boundaries = 1;
   
   boolean in_polygon = node_in_or_on_polygon(q0, nodes, num_nodes, include_boundaries);
   
-  if f {
-    if in_polygon {
+  if (f) {
+    if (in_polygon) {
       printf("true");
     }
     else {
