@@ -366,6 +366,48 @@ int test_line_segment_intersection(geometric_object the_block, geometric_object 
   return num_failed;
 }
 
+/************************************************************************/
+/* fourth unit test: check of point in polygon test with slanted H     */
+/************************************************************************/
+int test_point_in_polygon(int write_log) {
+  vector3 q0 = {0.4, 0.4, 0.0};
+  
+  int num_nodes = 12;
+  
+  vector3 nodes[num_nodes];
+  
+  nodes[0] = {0.5, 0.2, 0.0};
+  nodes[1] = {0.6, 0.3, 0.0};
+  nodes[2] = {0.5, 0.4, 0.0};
+  nodes[3] = {0.6, 0.5, 0.0};
+  nodes[4] = {0.7, 0.4, 0.0};
+  nodes[5] = {0.8, 0.5, 0.0};
+  nodes[6] = {0.5, 0.8, 0.0};
+  nodes[7] = {0.4, 0.7, 0.0};
+  nodes[8] = {0.5, 0.6, 0.0};
+  nodes[9] = {0.4, 0.5, 0.0};
+  nodes[10] = {0.3, 0.6, 0.0};
+  nodes[11] = {0.2, 0.5, 0.0};
+
+  FILE *f = write_long ? fopen("/tmp/test-prism.point-in-polygon", "w") : 0;
+  
+  boolean include_boundaries = 1;
+  
+  boolean in_polygon = node_in_or_on_polygon(q0, nodes, num_nodes, include_boundaries);
+  
+  if f {
+    if in_polygon {
+      printf("true");
+    }
+    else {
+	  printf("false");	 
+    }
+    fclose(f);
+  }
+  
+  return in_polygon;
+}
+
 /***************************************************************/
 /* unit tests: create the same parallelepiped two ways (as a   */
 /* block and as a prism) and verify that geometric primitives  */
