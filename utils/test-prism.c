@@ -390,7 +390,7 @@ int test_point_in_polygon(int write_log) {
   nodes[10] = {0.3, 0.6, 0.0};
   nodes[11] = {0.2, 0.5, 0.0};
   */
-  
+  /*
   int i;
   
   for (i = 0; i < num_nodes; i++) {
@@ -436,7 +436,21 @@ int test_point_in_polygon(int write_log) {
 
   nodes[11].x = 0.2;
   nodes[11].y = 0.5;
-
+  */
+  
+  nodes[0] = make_vector3(0.5, 0.2, 0.0);
+  nodes[1] = make_vector3(0.6, 0.3, 0.0);
+  nodes[2] = make_vector3(0.5, 0.4, 0.0);
+  nodes[3] = make_vector3(0.6, 0.5, 0.0);
+  nodes[4] = make_vector3(0.7, 0.4, 0.0);
+  nodes[5] = make_vector3(0.8, 0.5, 0.0);
+  nodes[6] = make_vector3(0.5, 0.8, 0.0);
+  nodes[7] = make_vector3(0.4, 0.7, 0.0);
+  nodes[8] = make_vector3(0.5, 0.6, 0.0);
+  nodes[9] = make_vector3(0.4, 0.5, 0.0);
+  nodes[10] = make_vector3(0.3, 0.6, 0.0);
+  nodes[11] = make_vector3(0.2, 0.5, 0.0);
+  
   FILE *f = write_log ? fopen("/tmp/test-prism.point-in-polygon", "w") : 0;
   
   boolean include_boundaries = 1;
@@ -515,8 +529,9 @@ int run_unit_tests() {
   //          although the distinction is only significant in cases where it is irrelevant
   int num_failed_2 = 0; // test_normal_to_object(the_block, the_prism, NUMLINES, write_log);
   int num_failed_3 = test_line_segment_intersection(the_block, the_prism, NUMLINES, write_log);
+  int num_failed_4 = test_point_in_polygon(write_log);
 
-  return num_failed_1 + num_failed_2 + num_failed_3;
+  return num_failed_1 + num_failed_2 + num_failed_3 + num_failed_4;
 }
 
 /***************************************************************/
