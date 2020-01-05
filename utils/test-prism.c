@@ -370,76 +370,25 @@ int test_line_segment_intersection(geometric_object the_block, geometric_object 
 /* fourth unit test: check of point in polygon test with slanted H     */
 /************************************************************************/
 int test_point_in_polygon(int write_log) {
-  // vector3 q0 = {0.4, 0.4, 0.0};
-  vector3 q0 = make_vector3(0.0, 0.0, 0.0);
-  // vector3 q0 = make_vector3(0.5, 0.7, 0.0);
+  // make array of test points that should always pass
+  vector3 pass[5];
+  pass[0] = make_vector3(0.3, 0.5, 0.0);
+  pass[1] = make_vector3(0.4, 0.4, 0.0);
+  pass[2] = make_vector3(0.5, 0.7, 0.0);
+  pass[3] = make_vector3(0.5, 0.5, 0.0);
+  pass[4] = make_vector3(0.5, 0.3, 0.0);
   
+  // make array of test points that should always pass
+  vector3 fail[5];
+  fail[0] = make_vector3(0.2, 0.2, 0.0);
+  fail[1] = make_vector3(0.3, 0.3, 0.0);
+  fail[2] = make_vector3(0.4, 0.6, 0.0);
+  fail[3] = make_vector3(0.6, 0.4, 0.0);
+  fail[4] = make_vector3(0.7, 0.7, 0.0);
+
+  // make array of nodes for the test polygon (an H slanted by 45 degrees)
   int num_nodes = 12;
-  
   vector3 nodes[num_nodes];
-  
-  /*
-  nodes[0] = {0.5, 0.2, 0.0};
-  nodes[1] = {0.6, 0.3, 0.0};
-  nodes[2] = {0.5, 0.4, 0.0};
-  nodes[3] = {0.6, 0.5, 0.0};
-  nodes[4] = {0.7, 0.4, 0.0};
-  nodes[5] = {0.8, 0.5, 0.0};
-  nodes[6] = {0.5, 0.8, 0.0};
-  nodes[7] = {0.4, 0.7, 0.0};
-  nodes[8] = {0.5, 0.6, 0.0};
-  nodes[9] = {0.4, 0.5, 0.0};
-  nodes[10] = {0.3, 0.6, 0.0};
-  nodes[11] = {0.2, 0.5, 0.0};
-  */
-  /*
-  int i;
-  
-  for (i = 0; i < num_nodes; i++) {
-    vector3 p;
-    p.x = 0.0;
-    p.y = 0.0;
-    p.z = 0.0;
-    nodes[i] = p;
-  }
-  
-  nodes[0].x = 0.5;
-  nodes[0].y = 0.2;
-
-  nodes[1].x = 0.6;
-  nodes[1].y = 0.3;
-
-  nodes[2].x = 0.5;
-  nodes[2].y = 0.4;
-
-  nodes[3].x = 0.6;
-  nodes[3].y = 0.5;
-
-  nodes[4].x = 0.7;
-  nodes[4].y = 0.4;
-
-  nodes[5].x = 0.8;
-  nodes[5].y = 0.5;
-
-  nodes[6].x = 0.5;
-  nodes[6].y = 0.8;
-
-  nodes[7].x = 0.4;
-  nodes[7].y = 0.7;
-
-  nodes[8].x = 0.5;
-  nodes[8].y = 0.6;
-
-  nodes[9].x = 0.4;
-  nodes[9].y = 0.5;
-
-  nodes[10].x = 0.3;
-  nodes[10].y = 0.6;
-
-  nodes[11].x = 0.2;
-  nodes[11].y = 0.5;
-  */
-  
   nodes[0] = make_vector3(0.5, 0.2, 0.0);
   nodes[1] = make_vector3(0.6, 0.3, 0.0);
   nodes[2] = make_vector3(0.5, 0.4, 0.0);
@@ -455,26 +404,46 @@ int test_point_in_polygon(int write_log) {
   
   FILE *f = write_log ? fopen("/tmp/test-prism.point-in-polygon", "w") : 0;
   
+  boolean all_points_success = 1;
   boolean include_boundaries = 1;
-  
-  boolean in_polygon = node_in_or_on_polygon(q0, nodes, num_nodes, include_boundaries);
+  int i;
+  for (i = 0; i < 5; i++) {
+    boolean local_success = node_in_or_on_polygon(pass[i], nodes, num_nodes, include_boundaries);
+    if (!local_success) {
+    	all_points_success = 0;
+    }
+    if (f) {
+      fprintf(f, "%f %f %i\n", pass[i].x, pass[i].y, local_success);
+    }
+  }
+  for (i = 0; i < 5; i++) {
+    boolean local_success = !node_in_or_on_polygon(fail[i], nodes, num_nodes, include_boundaries);
+    if (!local_success) {
+      all_points_success = 0;
+    }
+    if (f) {
+      fprintf(f, "%f %f %i\n", pass[i].x, pass[i].y, local_success);
+    }
+  }
+
+  if (f) {
+    if (all_points_success) {
+      printf("all test points for slanted H pass and fail as expected\n");
+    }
+    else {
+	  printf("one or more test points for slanted H do not pass and fail as expected\n");
+    }
+    fclose(f);
+  }
   
   int num_failed;
-  if (in_polygon) {
-    num_failed = 0;
+  if (all_points_success) {
+	num_failed = 0;
+    printf("all test points for slanted H pass and fail as expected\n");
   }
   else {
 	num_failed = 1;
-  }
-  
-  if (f) {
-    if (in_polygon) {
-      printf("inside");
-    }
-    else {
-	  printf("outside");
-    }
-    fclose(f);
+	printf("one or more test points for slanted H do not pass and fail as expected\n");
   }
   
   return num_failed;
