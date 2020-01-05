@@ -456,19 +456,22 @@ int test_point_in_polygon(int write_log) {
   
   boolean include_boundaries = 1;
   
-  int in_polygon = node_in_or_on_polygon(q0, nodes, num_nodes, include_boundaries);
+  boolean in_polygon = node_in_or_on_polygon(q0, nodes, num_nodes, include_boundaries);
+  int num_failed;
   
   if (f) {
     if (in_polygon) {
-      printf("true");
+      printf("inside");
+      num_failed = 0;
     }
     else {
-	  printf("false");	 
+	  printf("outside");
+	  num_failed = 1;
     }
     fclose(f);
   }
   
-  return in_polygon;
+  return num_failed;
 }
 
 /***************************************************************/
