@@ -371,8 +371,8 @@ int test_line_segment_intersection(geometric_object the_block, geometric_object 
 /************************************************************************/
 int test_point_in_polygon(int write_log) {
   // vector3 q0 = {0.4, 0.4, 0.0};
-  // vector3 q0 = make_vector3(0.0, 0.0, 0.0);
-  vector3 q0 = make_vector3(0.5, 0.7, 0.0);
+  vector3 q0 = make_vector3(0.0, 0.0, 0.0);
+  // vector3 q0 = make_vector3(0.5, 0.7, 0.0);
   
   int num_nodes = 12;
   
