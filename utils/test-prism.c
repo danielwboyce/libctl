@@ -456,7 +456,7 @@ int test_point_in_polygon(int write_log) {
   
   boolean include_boundaries = 1;
   
-  boolean in_polygon = node_in_or_on_polygon(q0, nodes, num_nodes, include_boundaries);
+  int in_polygon = node_in_or_on_polygon(q0, nodes, num_nodes, include_boundaries);
   
   if (f) {
     if (in_polygon) {
