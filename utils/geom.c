@@ -2043,7 +2043,7 @@ boolean node_in_or_on_polygon(vector3 q0, vector3 *nodes, int num_nodes,
   // Transform coordinate system of nodes such that q0 is at 0|0
   for (nn = 0; nn < num_nodes; nn++) {
     int status = intersect_ray_with_segment(q0, nodes[nn], nodes[(nn + 1) % num_nodes], xAxis, 0);
-    if (status) { return include_boundaries; }
+    if (status == IN_SEGMENT || status == INTERSECTING) { return include_boundaries; }
 
     // Find start point which is not on the x axis (from q0)
     if (fabs(nodes[nn].y - q0.y) > THRESH) {
