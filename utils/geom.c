@@ -1980,7 +1980,7 @@ int intersect_line_with_segment(vector3 q0, vector3 q1, vector3 q2, vector3 u, d
     double dot = q01x * q02x + q01y * q02y;
     if (fabs(dot) < (1.0 - THRESH) * q01 * q02)
       return NON_INTERSECTING;
-    else if (dot < 0.0) {
+    else if (dot <= 0.0) {
       *s = 0.0;
       return IN_SEGMENT;
     }
