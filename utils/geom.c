@@ -1975,12 +1975,13 @@ int intersect_line_with_segment(vector3 q0, vector3 q1, vector3 q2, vector3 u, d
   double DetM = M00 * M11 - M01 * M10;
   double L2 = M01 * M01 + M11 * M11; // squared length of edge, used to set length scale
   if (fabs(DetM) < 1.0e-10 * L2) {   // d zero or nearly parallel to edge
+    if (vector3_nearly_equal(q0, q1, 1e-12) || vector3_nearly_equal(q0, q2, 1e-12)) return IN_SEGMENT;
     double q01x = q0.x - q1.x, q01y = q0.y - q1.y, q01 = sqrt(q01x * q01x + q01y * q01y);
     double q02x = q0.x - q2.x, q02y = q0.y - q2.y, q02 = sqrt(q02x * q02x + q02y * q02y);
     double dot = q01x * q02x + q01y * q02y;
     if (fabs(dot) < (1.0 - THRESH) * q01 * q02)
       return NON_INTERSECTING;
-    else if (dot <= 0.0) {
+    else if (dot < 0.0) {
       *s = 0.0;
       return IN_SEGMENT;
     }
