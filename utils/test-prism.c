@@ -1106,7 +1106,7 @@ int test_hex_prism() {
   vector3 zhat = make_vector3(0, 0, 1);
 
   double ten_degree_sidewall = 10.0 * K_PI / 180.0;
-  geometric_object hex_ten_degree_sidewall_geom_object = make_slanted_prism(m, nodes, nodes.num_items, height, zhat,
+  geometric_object hex_ten_degree_sidewall_geom_object = make_slanted_prism(m, nodes.items, nodes.num_items, height, zhat,
                                                                             ten_degree_sidewall);
   prism *hex_ten_degree_sidewall_prism = hex_ten_degree_sidewall_geom_object.subclass.prism_data;
 
