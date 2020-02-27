@@ -1085,6 +1085,36 @@ int test_helper_functions_on_octagonal_c_prism() {
   return num_failed_normal + num_failed_tapered;
 }
 
+/************************************************************************/
+/* 8th unit test: quick test of hexagon test prism to see if the        */
+/* vertices are calculated correctly                                    */
+/************************************************************************/
+int test_hex_prism() {
+  void *m = NULL;
+
+  vector3_list nodes;
+  nodes.num_items = 6;
+  nodes.items = (vector3 *) malloc(nodes.num_items * sizeof(vector3));
+  nodes.items[0] = make_vector3(-1.0, 0.0, 0.0);
+  nodes.items[1] = make_vector3(-0.5, sqrt(3.0) / 2.0, 0.0);
+  nodes.items[2] = make_vector3(0.5, sqrt(3.0) / 2.0, 0.0);
+  nodes.items[3] = make_vector3(1.0, 0.0, 0.0);
+  nodes.items[4] = make_vector3(0.5, -sqrt(3.0) / 2.0, 0.0);
+  nodes.items[5] = make_vector3(-0.5, -sqrt(3.0) / 2.0, 0.0);
+
+  double height = 1.5;
+  vector3 zhat = make_vector3(0, 0, 1);
+
+  double ten_degree_sidewall = 10.0 * K_PI / 180.0;
+  geometric_object hex_ten_degree_sidewall_geom_object = make_slanted_prism(m, nodes, nodes.num_items, height, zhat,
+                                                                            ten_degree_sidewall);
+  prism *hex_ten_degree_sidewall_prism = hex_ten_degree_sidewall_geom_object.subclass.prism_data;
+
+  prism2gnuplot(hex_ten_degree_sidewall_prism, "hex_ten_degree_sidewall_gnu_plot.dat");
+
+  return 0;
+}
+
 /***************************************************************/
 /* unit tests: create the same parallelepiped two ways (as a   */
 /* block and as a prism) and verify that geometric primitives  */
@@ -1148,8 +1178,9 @@ int run_unit_tests() {
   int num_failed_5 = test_square_base_sidewall_prisms_to_gnuplot();
   int num_failed_6 = test_octagon_c_base_sidewall_prisms_to_gnuplot();
   int num_failed_7 = test_helper_functions_on_octagonal_c_prism();
+  int num_failed_8 = test_hex_prism();
 
-  return num_failed_1 + num_failed_3 + num_failed_4 + num_failed_5 + num_failed_6 + num_failed_7;
+  return num_failed_1 + num_failed_3 + num_failed_4 + num_failed_5 + num_failed_6 + num_failed_7 + num_failed_8;
 }
 
 /***************************************************************/
